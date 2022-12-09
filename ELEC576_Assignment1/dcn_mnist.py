@@ -2,7 +2,7 @@ import os
 import time
 import tensorflow as tf
 
-os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+# os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '0'
 if tf.__version__.split('.')[0] == '2':
     import tensorflow.compat.v1 as tf
@@ -343,7 +343,7 @@ def main_2c(x, y_, result_dir):
     x_image = tf.reshape(x, [-1, 28, 28, 1])
 
     activationTypes = ["relu", "tanh", "sigmoid", "leakyReLU"]
-    activationType = activationTypes[3]
+    activationType = activationTypes[0]
     initializeTypes = ["random", "xavier"]
     initializeType = initializeTypes[0]
     # first convolutional layer
@@ -374,9 +374,9 @@ def main_2c(x, y_, result_dir):
 
     # setup training
     cross_entropy = tf.reduce_mean(-tf.reduce_sum(y_ * tf.log(y_conv), reduction_indices=[1]))
-    # train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
+    train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
     # train_step = tf.train.MomentumOptimizer(1e-4).minimize(cross_entropy)
-    train_step = tf.train.AdagradOptimizer(1e-4).minimize(cross_entropy)
+    # train_step = tf.train.AdagradOptimizer(1e-4).minimize(cross_entropy)
 
     correct_prediction = tf.equal(tf.argmax(y_conv, 1), tf.argmax(y_, 1))
     accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32), name='accuracy')
